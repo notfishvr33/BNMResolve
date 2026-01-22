@@ -1,6 +1,6 @@
 #pragma once
 #include <type_traits>
-#include <assert>
+#include <cassert>
 #include "../Utils/includes.h" // Add your bnm includes here
 
 using namespace BNM;
@@ -10,7 +10,7 @@ using namespace UnityEngine;
 
 #define BNM_CUSTOM_DEFAULT_GETTER(CustomType)                     \
 template<>                                                   \
-BNM::Defaults::DefaultTypeRef BNM::Defaults::Get<CustomType*>() { \
+inline BNM::Defaults::DefaultTypeRef BNM::Defaults::Get<CustomType*>() { \
     static BNM::Defaults::Internal::ClassType classCache = nullptr; \
     if (!classCache) {                                      \
         classCache = CustomType::GetClass()._data;                \
@@ -3849,4 +3849,5 @@ BNM_CUSTOM_DEFAULT_GETTER(::MonoBehaviour)
 BNM_CUSTOM_DEFAULT_GETTER(SkinnedMeshRenderer)
 BNM_CUSTOM_DEFAULT_GETTER(DownloadHandlerTexture)
 BNM_CUSTOM_DEFAULT_GETTER(TextMeshPro)
+
 BNM_CUSTOM_DEFAULT_GETTER(TMP_Text)
