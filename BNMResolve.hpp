@@ -45,6 +45,8 @@ struct Collider;
 struct SphereCollider;
 struct BoxCollider;
 struct MeshRenderer;
+struct MeshFilter;
+struct TextMesh;
 struct Resources;
 struct AssetBundle;
 struct Physics;
@@ -1216,6 +1218,26 @@ struct Renderer : Component{
         return GetMaterialArrayM[this]();
     }
 
+    void SetShadowCastingMode(int mode) {
+        static auto set_shadowCastingMode = (void(*)(void*, int))GetExternMethod("UnityEngine.Renderer::set_shadowCastingMode");
+        if (set_shadowCastingMode) {
+            set_shadowCastingMode(this, mode);
+        } else {
+            static Method<void> set_shadowCastingMode_m = GetClass().GetMethod("set_shadowCastingMode");
+            set_shadowCastingMode_m[this](mode);
+        }
+    }
+
+    void SetRenderingLayerMask(int mask) {
+        static auto set_renderingLayerMask = (void(*)(void*, int))GetExternMethod("UnityEngine.Renderer::set_renderingLayerMask");
+        if (set_renderingLayerMask) {
+            set_renderingLayerMask(this, mask);
+        } else {
+            static Method<void> set_renderingLayerMask_m = GetClass().GetMethod("set_renderingLayerMask");
+            set_renderingLayerMask_m[this](mask);
+        }
+    }
+
 };
 struct SkinnedMeshRenderer : Renderer {
     static Class GetClass() {
@@ -1873,6 +1895,93 @@ struct MeshRenderer : Renderer{
     static Class GetClass(){
         static Class mclass = Class("UnityEngine", "MeshRenderer");
         return mclass;
+    }
+};
+struct MeshFilter : Component{
+    static MonoType* GetType(){
+        static MonoType* type = Class("UnityEngine", "MeshFilter").GetMonoType();
+        return type;
+    }
+    static Class GetClass(){
+        static Class mclass = Class("UnityEngine", "MeshFilter");
+        return mclass;
+    }
+
+    void* GetMesh() {
+        static auto get_mesh = (void*(*)(void*))GetExternMethod("UnityEngine.MeshFilter::get_mesh");
+        if (get_mesh) return get_mesh(this);
+        static Method<void*> get_mesh_m = GetClass().GetMethod("get_mesh");
+        return get_mesh_m[this]();
+    }
+
+    void SetMesh(void* mesh) {
+        static auto set_mesh = (void(*)(void*, void*))GetExternMethod("UnityEngine.MeshFilter::set_mesh");
+        if (set_mesh) {
+            set_mesh(this, mesh);
+        } else {
+            static Method<void> set_mesh_m = GetClass().GetMethod("set_mesh");
+            set_mesh_m[this](mesh);
+        }
+    }
+};
+struct TextMesh : Component{
+    static MonoType* GetType(){
+        static MonoType* type = Class("UnityEngine", "TextMesh").GetMonoType();
+        return type;
+    }
+    static Class GetClass(){
+        static Class mclass = Class("UnityEngine", "TextMesh");
+        return mclass;
+    }
+
+    void SetText(std::string text) {
+        static auto set_text = (void(*)(void*, String*))GetExternMethod("UnityEngine.TextMesh::set_text");
+        if (set_text) {
+            set_text(this, CreateMonoString(text));
+        } else {
+            static Method<void> set_text_m = GetClass().GetMethod("set_text");
+            set_text_m[this](CreateMonoString(text));
+        }
+    }
+
+    void SetFontSize(int size) {
+        static auto set_fontSize = (void(*)(void*, int))GetExternMethod("UnityEngine.TextMesh::set_fontSize");
+        if (set_fontSize) {
+            set_fontSize(this, size);
+        } else {
+            static Method<void> set_fontSize_m = GetClass().GetMethod("set_fontSize");
+            set_fontSize_m[this](size);
+        }
+    }
+
+    void SetAlignment(int alignment) {
+        static auto set_alignment = (void(*)(void*, int))GetExternMethod("UnityEngine.TextMesh::set_alignment");
+        if (set_alignment) {
+            set_alignment(this, alignment);
+        } else {
+            static Method<void> set_alignment_m = GetClass().GetMethod("set_alignment");
+            set_alignment_m[this](alignment);
+        }
+    }
+
+    void SetAnchor(int anchor) {
+        static auto set_anchor = (void(*)(void*, int))GetExternMethod("UnityEngine.TextMesh::set_anchor");
+        if (set_anchor) {
+            set_anchor(this, anchor);
+        } else {
+            static Method<void> set_anchor_m = GetClass().GetMethod("set_anchor");
+            set_anchor_m[this](anchor);
+        }
+    }
+
+    void SetColor(Color color) {
+        static auto set_color = (void(*)(void*, Color))GetExternMethod("UnityEngine.TextMesh::set_color");
+        if (set_color) {
+            set_color(this, color);
+        } else {
+            static Method<void> set_color_m = GetClass().GetMethod("set_color");
+            set_color_m[this](color);
+        }
     }
 };
 struct Resources{
@@ -3832,6 +3941,8 @@ BNM_CUSTOM_DEFAULT_GETTER(Collider)
 BNM_CUSTOM_DEFAULT_GETTER(SphereCollider)
 BNM_CUSTOM_DEFAULT_GETTER(BoxCollider)
 BNM_CUSTOM_DEFAULT_GETTER(MeshRenderer)
+BNM_CUSTOM_DEFAULT_GETTER(MeshFilter)
+BNM_CUSTOM_DEFAULT_GETTER(TextMesh)
 BNM_CUSTOM_DEFAULT_GETTER(AssetBundle)
 BNM_CUSTOM_DEFAULT_GETTER(LightmapData)
 BNM_CUSTOM_DEFAULT_GETTER(LightmapSettings)
