@@ -73,6 +73,9 @@ struct DownloadHandlerTexture;
 struct GL;
 struct TextMeshPro;
 struct TMP_Text;
+struct TMP_Asset;
+struct TMP_FontAsset;
+
 
 enum GradientMode
 {
@@ -3531,7 +3534,22 @@ struct GL{
             PopMatrixM();
         }
     }
-
+};
+struct TMP_Asset : GameObject {
+    static MonoType* GetType(){
+        return Class("TMPro", "TMP_Asset").GetMonoType();
+    }
+    static Class GetClass(){
+        return Class("TMPro", "TMP_Asset");
+    }
+};
+struct TMP_FontAsset : TMP_Asset {
+    static MonoType* GetType(){
+        return Class("TMPro", "TMP_FontAsset").GetMonoType();
+    }
+    static Class GetClass(){
+        return Class("TMPro", "TMP_FontAsset");
+    }
 };
 struct TMP_Text : MaskableGraphic{
     static MonoType* GetType(){
@@ -3570,6 +3588,30 @@ struct TMP_Text : MaskableGraphic{
             static Method<void> set_fontSize_m = GetClass().GetMethod("set_fontSize");
             set_fontSize_m[this](size);
         }
+    }
+    void SetRichText(bool richText){
+        static auto set_richText = (void(*)(void*, bool))GetExternMethod("TMPro.TMP_Text::set_richText");
+        if (set_richText) {
+            set_richText(this, richText);
+        } else {
+            static Method<void> set_text_m = GetClass().GetMethod("set_richText");
+            set_text_m[this](richText);
+        }
+    }
+    void SetFont(TMP_FontAsset font){
+        static auto set_font = (void(*)(void*, TMP_FontAsset))GetExternMethod("TMPro.TMP_Text::set_font");
+        if (set_font) {
+            set_font(this, font);
+        } else {
+            static Method<void> set_font_m = GetClass().GetMethod("set_font");
+            set_font_m[this](font);
+        }
+    }
+    TMP_FontAsset GetFont() {
+        static auto get_font = (TMP_FontAsset(*)(void*))GetExternMethod("TMPro.TMP_Text::get_font");
+        if (get_font) return get_font(this);
+        static Method<TMP_FontAsset> get_font_m = GetClass().GetMethod("get_font");
+        return get_font_m[this]();
     }
     TextAlignmentOptions GetAlignment(){
         static auto get_alignment = (TextAlignmentOptions(*)(void*))GetExternMethod("TMPro.TMP_Text::get_alignment");
@@ -3962,3 +4004,5 @@ BNM_CUSTOM_DEFAULT_GETTER(DownloadHandlerTexture)
 BNM_CUSTOM_DEFAULT_GETTER(TextMeshPro)
 
 BNM_CUSTOM_DEFAULT_GETTER(TMP_Text)
+BNM_CUSTOM_DEFAULT_GETTER(TMP_Asset)
+BNM_CUSTOM_DEFAULT_GETTER(TMP_FontAsset)
